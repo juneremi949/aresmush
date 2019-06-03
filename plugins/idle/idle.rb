@@ -18,6 +18,8 @@ module AresMUSH
           return IdleActionCmd
         when "execute"
           return IdleExecuteCmd
+        when "note"
+          return IdleNotesCmd
         when "queue", nil
           return IdleQueueCmd
         when "preview"
@@ -69,6 +71,8 @@ module AresMUSH
       case request.cmd
       when "roster"
         return RosterRequestHandler
+      when "claimRoster"
+        return ClaimRosterRequestHandler
       end
       nil
     end

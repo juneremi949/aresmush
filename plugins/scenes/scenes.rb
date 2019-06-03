@@ -45,8 +45,6 @@ module AresMUSH
           end
         when "drop"
           return PoseDropCmd
-        when "skip"
-          return PoseSkipCmd
         when "nudge"
           return PoseNudgeCmd
         when "order"
@@ -82,6 +80,8 @@ module AresMUSH
           return SceneDeleteCmd
         when "invite", "uninvite"
           return SceneInviteCmd
+        when "leave"
+          return SceneLeaveCmd
         when "undo"
           return SceneUndoCmd
         when "replace", "typo"
@@ -106,6 +106,8 @@ module AresMUSH
           return SceneUnshareCmd
         when "unshared"
           return ScenesCmd
+        when "webstart"
+          return SceneWebStartCmd
         end
       end
       
@@ -159,14 +161,16 @@ module AresMUSH
         return EditPlotRequestHandler
       when "editScene"
         return EditSceneRequestHandler
+      when "joinScene"
+        return JoinSceneRequestHandler
       when "likeScene"
         return LikeSceneRequestHandler
       when "liveScenes"
         return LiveScenesRequestHandler        
       when "liveScene"
         return LiveSceneRequestHandler  
-      when "muteScene"
-        return MuteSceneRequestHandler 
+      when "markSceneRead"
+        return MarkSceneReadRequestHandler
       when "myScenes"
         return MyScenesRequestHandler     
       when "plots"
@@ -187,6 +191,8 @@ module AresMUSH
         return SearchScenesRequestHandler
       when "unwatchScene"
         return UnwatchSceneRequestHandler
+      when "watchScene"
+        return WatchSceneRequestHandler
       end
       nil
     end

@@ -30,6 +30,8 @@ module AresMUSH
           return RoomAreaCmd
         when "parent"
           return AreaParentCmd
+        when "rename"
+          return AreaRenameCmd
         end
       when "build"
         return BuildCmd
@@ -68,7 +70,14 @@ module AresMUSH
       when "out"
         return OutCmd
       when "owner"
-        return OwnerCmd
+        case cmd.switch
+        when "list"
+          return OwnerListCmd
+        when "set"
+          return OwnerSetCmd
+        when nil
+          return OwnerListCmd
+        end
       when "room"
         return RoomsCmd
       when "roomtype"
