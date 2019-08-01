@@ -102,12 +102,14 @@ website:
     - title: Files
       route: files
     - id: markdown
-      title: Markdown Reference
+      title: Editing Help
       route: help-topic
   - title: Help
     menu:
     - title: Requests
       route: jobs
+    - title: Account
+      route: account
     - divider: true
     - title: Game Help
       route: help

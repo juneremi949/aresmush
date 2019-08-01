@@ -2,7 +2,7 @@ module AresMUSH
   module FS3Combat
     
     def self.action_klass_map
-      {
+      actions = {
         "aim" => AimAction,
         "attack" => AttackAction,
         "distract" => DistractAction,
@@ -16,6 +16,13 @@ module AresMUSH
         "subdue" => SubdueAction,
         "suppress" => SuppressAction
       }
+      if (FS3Combat.custom_actions)
+        FS3Combat.custom_actions.each do |k, v|
+          actions[k] = v
+        end
+      end
+      
+      actions
     end
     
     def self.find_action_klass(name)
@@ -40,6 +47,8 @@ module AresMUSH
     end
     
     def self.reset_for_new_turn(combatant)
+      FS3Combat.custom_new_turn_reset(combatant)
+      
       # Reset aim if they've done anything other than aiming. 
       if (combatant.is_aiming? && combatant.action_klass != "AresMUSH::FS3Combat::AimAction")
         combatant.log "Reset aim for #{combatant.name}."
@@ -402,7 +411,13 @@ module AresMUSH
       hit_mod = [25, hit_mod].min
       
       melee_damage_mod = 0
-      weapon_type = FS3Combat.weapon_stat(weapon, "weapon_type").titlecase
+      weapon_type = FS3Combat.weapon_stat(weapon, "weapon_type")
+      
+      if (!weapon_type)
+        return [ t('fs3combat.attack_with_missing_weapon', :name => weapon) ]
+      end
+      
+      weapon_type = weapon_type.titlecase
       if (weapon_type == "Melee")
         strength_roll = FS3Combat.roll_strength(attacker)
         melee_damage_mod = [(strength_roll - 1) * 5, 0].max
