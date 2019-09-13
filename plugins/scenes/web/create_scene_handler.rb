@@ -25,7 +25,7 @@ module AresMUSH
         
         scene = Scene.create(
         location: request.args[:location],
-        summary: request.args[:summary],
+        summary: Website.format_input_for_mush(request.args[:summary]),
         content_warning: request.args[:content_warning],
         scene_type: request.args[:scene_type],
         title: request.args[:title],
@@ -43,7 +43,7 @@ module AresMUSH
         participant_names.each do |p|
           participant = Character.find_one_by_name(p.strip)
           if (participant)
-            Scenes.add_participant(scene, participant)
+            Scenes.add_participant(scene, participant, enactor)
           end
         end
       

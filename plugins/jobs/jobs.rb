@@ -29,6 +29,8 @@ module AresMUSH
           return ListJobCaegoriesCmd
         when "categorycolor"
           return JobCategoryColorCmd
+        when "categorytemplate"
+          return JobCategoryTemplateCmd
         when "categoryroles"
           return JobCategoryRolesCmd
         when "createcategory"
@@ -63,6 +65,8 @@ module AresMUSH
           return CreateQueryJobCmd
         when "renamecategory"
           return RenameJobCategoryCmd
+        when "scan"
+          return JobScanCmd
         when "search"
           return JobSearchCmd
         when "status"
@@ -111,6 +115,8 @@ module AresMUSH
       case event_name
       when "CronEvent"
         return JobArchiveCronHandler
+      when "RoleDeletedEvent"
+        return RoleDeletedEventHandler
       else
         return nil
       end
