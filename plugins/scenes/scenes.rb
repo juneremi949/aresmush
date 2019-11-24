@@ -27,10 +27,6 @@ module AresMUSH
         return AutospaceCmd
       when "nospoof"
         return NospoofCmd
-      when "pemit"
-        return PemitCmd
-      when "whisper"
-        return WhisperCmd
       when "ooc"
         # ooc by itself is an alias for offstage
         if (cmd.args)
@@ -68,7 +64,7 @@ module AresMUSH
       
       when "scene"
         case cmd.switch
-        when "all"
+        when "all", "open"
           return ScenesCmd
         when nil
           if (cmd.args)
@@ -104,12 +100,14 @@ module AresMUSH
           return SceneStopCmd
         when "types"
           return SceneTypesCmd
-        when "log", "repose"
+        when "log"
           return SceneLogCmd
         when "clearlog"
           return SceneLogClearCmd
         when "enablelog", "disablelog"
           return SceneLogEnableCmd
+        when "repose"
+          return SceneReposeCmd
         when "share"
           return SceneShareCmd
         when "unshare"
@@ -167,6 +165,8 @@ module AresMUSH
         return DeleteSceneRequestHandler
       when "downloadScene"
         return DownloadSceneRequestHandler
+      when "dropPoseOrder"
+        return DropPoseOrderRequestHandler
       when "editPlot"
         return EditPlotRequestHandler
       when "editScene"
@@ -199,6 +199,8 @@ module AresMUSH
         return GetSceneTypesRequestHandler
       when "searchScenes"
         return SearchScenesRequestHandler
+      when "switchPoseOrder"
+        return SwitchPoseOrderRequestHandler
       when "unwatchScene"
         return UnwatchSceneRequestHandler
       when "watchScene"
