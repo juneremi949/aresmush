@@ -1,8 +1,9 @@
 module AresMUSH
   module Events
     def self.can_manage_events?(actor)
-      actor.has_permission?("manage_events")
+      actor && actor.has_permission?("manage_events")
     end
+
     def self.ical_path
       File.join(AresMUSH.game_path, 'calendar.ics')
     end
@@ -66,12 +67,13 @@ module AresMUSH
       end
     end
     
-    def self.create_event(enactor, title, datetime, desc, warning = nil)
+    def self.create_event(enactor, title, datetime, desc, warning, tags)
       event = Event.create(title: title, 
       starts: datetime, 
       description: desc,
       character: enactor,
-      content_warning: warning)
+      content_warning: warning,
+      tags: tags)
         
       Channels.announce_notification(t('events.event_created_notification', :title => title))
       Events.events_updated
@@ -91,11 +93,12 @@ module AresMUSH
       Events.events_updated
     end
    
-    def self.update_event(event, enactor, title, datetime, desc, warning = nil)
+    def self.update_event(event, enactor, title, datetime, desc, warning, tags)
       event.update(title: title)
       event.update(starts: datetime)
       event.update(description: desc)
       event.update(content_warning: warning)
+      event.update(tags: tags)
      
       Events.events_updated
       message = t('events.event_updated_notification', :title => title)

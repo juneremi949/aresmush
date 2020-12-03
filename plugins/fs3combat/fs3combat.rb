@@ -72,7 +72,7 @@ module AresMUSH
            return CombatListCmd
          when "ammo"
            return CombatAmmoCmd
-         when "attackmod", "defensemod", "lethalmod"
+         when "attackmod", "defensemod", "lethalmod", "initmod"
            return CombatModCmd
          when "armor"
            return CombatArmorCmd
@@ -177,6 +177,8 @@ module AresMUSH
         return CombatsRequestHandler
       when "combatAiActions"
         return CombatAiActionsRequestHandler
+      when "combatHero"
+        return CombatHeroRequestHandler
       when "combatSetup"
         return CombatSetupRequestHandler
       when "newCombatTurn"

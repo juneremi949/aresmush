@@ -14,6 +14,7 @@ module AresMUSH
     attribute :temp_room, :type => DataType::Boolean
     attribute :completed
     attribute :scene_type
+    attribute :scene_pacing
     attribute :location
     attribute :summary
     attribute :limit
@@ -28,14 +29,17 @@ module AresMUSH
     collection :scene_poses, "AresMUSH::ScenePose"
     collection :scene_likes, "AresMUSH::SceneLike"
     reference :scene_log, "AresMUSH::SceneLog"
-    reference :plot, "AresMUSH::Plot"
     
     set :invited, "AresMUSH::Character"
     set :watchers, "AresMUSH::Character"
     set :participants, "AresMUSH::Character"
     set :likers, "AresMUSH::Character"
     
-    before_delete :delete_poses_and_log
+    # DEPRECATED - DO NOT USE (replaced by plot links)
+    reference :plot, "AresMUSH::Plot"
+    set :plots, "AresMUSH::Plot"
+    
+    before_delete :on_delete
     
     index :shared
     index :completed
@@ -82,11 +86,16 @@ module AresMUSH
       if (self.scene_log)
         self.scene_log.delete
       end
+    end
+    
+    def on_delete
+      delete_poses_and_log
       Scenes.find_all_scene_links(self).each { |s| s.delete }
+      self.plot_links.each { |p| p.delete }
     end
     
     def all_info_set?
-      missing_fields = self.title.blank? || self.location.blank? || self.scene_type.blank? || self.summary.blank?
+      missing_fields = self.title.blank? || self.location.blank? || self.scene_type.blank? || self.summary.blank? || self.icdate.blank?
       !missing_fields
     end
 
@@ -147,7 +156,7 @@ module AresMUSH
       "#{Game.web_portal_url}/scene/#{self.id}"
     end
     
-    def limited_participation?
+    def has_notes?
       !self.limit.blank?
     end
     
@@ -170,6 +179,19 @@ module AresMUSH
       else
         OOCTime.local_short_timestr(viewer, last_pose.updated_at)
       end
+    end
+    
+    def is_participant?(char)
+      return false if !char
+      char == self.owner || self.participants.include?(char)
+    end
+    
+    def plot_links
+      PlotLink.find_by_scene(self)
+    end
+    
+    def related_plots
+      self.plot_links.map { |p| p.plot }
     end
     
   end
